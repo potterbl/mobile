@@ -77,7 +77,7 @@
     </content-block>
   </div>
   <div class="step" v-if="step == 2">
-    <content-block>
+    <content-block style="padding: 0 12px; padding-bottom: 6px">
       <div class="step__header">
         <div class="step__of" style="margin-left: 18px">
           <a href="#" class="prev caption__regular" @click="prev">&lt;</a>
@@ -342,8 +342,9 @@ input {
 
 /* ------------------------------------------------------- */
 .step__header {
+  padding-top: 6px;
   position: sticky;
-  top: 6px;
+  top: 0;
   background-color: #f6f7f8;
 }
 .prev {
