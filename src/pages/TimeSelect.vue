@@ -187,7 +187,7 @@ export default {
       daysOfWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       currentMonth: [],
       selectedDay: "",
-      selectedTime: "default",
+      selectedTime: "8:00",
       morning: [
         "8:00 am",
         "9:15 am",
@@ -217,46 +217,56 @@ export default {
       }, 500)
     },
     updateMove(){
-        if(this.monthSelect == false){
-            if(this.dayChosen == true){
-        const menu = document.querySelector('#day__menu')
-    const menuHeader = document.querySelector('#header')
+      const menu = document.querySelector('#day__menu');
 
-    menuHeader.addEventListener('mousedown', (e) => {
-        var startY = menuHeader.offsetTop;
+function startMoveMenu(e) {
+  var startY = e.clientY || e.touches[0].clientY;
+  var currentTop = menu.offsetTop;
 
-        document.addEventListener("mousemove", moveMenu);
-      document.addEventListener("mouseup", stopMoveMenu);
+  document.addEventListener("mousemove", moveMenu);
+  document.addEventListener("touchmove", moveMenu);
+  document.addEventListener("mouseup", stopMoveMenu);
+  document.addEventListener("touchend", stopMoveMenu);
 
-      e.stopPropagation();
-      e.preventDefault();
+  e.stopPropagation();
+  e.preventDefault();
 
-      function moveMenu(e) {
-        var newTop = e.clientY - startY - menu.offsetTop
+  function moveMenu(e) {
+    var newY = e.clientY || e.touches[0].clientY;
+    var newTop = currentTop + newY - startY;
 
-        var minTop = 0;
-        var maxTop = menu.offsetHeight / 2;
-        if (newTop > menu.offsetHeight / 4) {
-            newTop = maxTop;
-            menu.classList.remove('menu')
-        } else if (newTop < menu.offsetHeight / 4) {
-            newTop = minTop;
-            menu.classList.add('menu')
-        }
-
-        menu.style = 'transform: translateY(' + newTop + "px)";
-      }
-
-      function stopMoveMenu(e) {
-        document.removeEventListener("mousemove", moveMenu);
-        document.removeEventListener("mouseup", stopMoveMenu);
-
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    })
-}
+    var minTop = 0;
+    var maxTop = menu.offsetHeight / 2;
+    if (newTop > menu.offsetHeight / 4) {
+      newTop = maxTop;
+      menu.classList.remove('menu');
+    } else if (newTop < menu.offsetHeight / 4) {
+      newTop = minTop;
+      menu.classList.add('menu');
     }
+
+    menu.style = 'transform: translateY(' + newTop + "px)";
+  }
+
+  function stopMoveMenu(e) {
+    document.removeEventListener("mousemove", moveMenu);
+    document.removeEventListener("touchmove", moveMenu);
+    document.removeEventListener("mouseup", stopMoveMenu);
+    document.removeEventListener("touchend", stopMoveMenu);
+
+    e.stopPropagation();
+    e.preventDefault();
+  }
+}
+
+if (this.monthSelect == false) {
+  if (this.dayChosen == true) {
+    const menuHeader = document.querySelector('#header');
+
+    menuHeader.addEventListener('mousedown', startMoveMenu);
+    menuHeader.addEventListener('touchstart',startMoveMenu);
+  }
+}
     },
     monthChange(newValue) {
       this.month = newValue;
@@ -291,39 +301,50 @@ export default {
       });
     }
 
-    const days = document.querySelector("#days");
+    // const days = document.querySelector("#days");
 
-    days.addEventListener("mousedown", (e) => {
-      var startX = e.clientX - days.offsetLeft;
+// days.addEventListener("touchstart", (e) => {
+//   var touch = e.touches[0];
+//   var startX = touch.clientX - days.offsetLeft;
 
-      document.addEventListener("mousemove", moveDays);
-      document.addEventListener("mouseup", stopMoveDays);
+//   document.addEventListener("touchmove", moveDays);
+//   document.addEventListener("touchend", stopMoveDays);
+//   document.addEventListener("mousemove", moveDays);
+//   document.addEventListener("mouseup", stopMoveDays);
 
-      e.stopPropagation();
-      e.preventDefault();
+//   e.stopPropagation();
+//   e.preventDefault();
 
-      function moveDays(e) {
-        var newLeft = e.clientX - startX - days.offsetParent.offsetLeft;
+//   function moveDays(e) {
+//     if (e.type === "touchmove") {
+//       var touch = e.touches[0];
+//       var newLeft = touch.clientX - startX - days.offsetParent.offsetLeft;
+//     } else {
+//       newLeft = e.clientX - startX - days.offsetParent.offsetLeft;
+//     }
 
-        var minLeft = -days.offsetWidth + window.innerWidth * 0.98;
-        var maxLeft = 0;
-        if (newLeft > maxLeft) {
-          newLeft = maxLeft;
-        } else if (newLeft < minLeft) {
-          newLeft = minLeft;
-        }
+//     var minLeft = -days.offsetWidth + window.innerWidth * 0.98;
+//     var maxLeft = 0;
+//     if (newLeft > maxLeft) {
+//       newLeft = maxLeft;
+//     } else if (newLeft < minLeft) {
+//       newLeft = minLeft;
+//     }
 
-        days.style.left = newLeft + "px";
-      }
+//     days.style.left = newLeft + "px";
+//   }
 
-      function stopMoveDays(e) {
-        document.removeEventListener("mousemove", moveDays);
-        document.removeEventListener("mouseup", stopMoveDays);
+//   function stopMoveDays(e) {
+//     document.removeEventListener("touchmove", moveDays);
+//     document.removeEventListener("touchend", stopMoveDays);
+//     document.removeEventListener("mousemove", moveDays);
+//     document.removeEventListener("mouseup", stopMoveDays);
 
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    });
+//     e.stopPropagation();
+//     e.preventDefault();
+//   }
+// });
+
   }
 };
 </script>
@@ -331,7 +352,7 @@ export default {
 <style scoped>
 .time__select__wrapper {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - env(safe-area-inset-bottom));
   background-color: #f6f7f8;
   overflow: hidden;
 }
@@ -416,6 +437,11 @@ export default {
 }
 .days {
   position: relative;
+  height: 71px;
+  overflow-y: scroll;
+}
+.days::-webkit-scrollbar{
+  display: none;
 }
 .day__wrapper {
   position: absolute;

@@ -28,7 +28,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    height: 100vh;
+    height: calc(100vh - env(safe-area-inset-bottom));
 }
 .text{
     margin-top: 48px;
