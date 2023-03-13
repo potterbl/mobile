@@ -77,7 +77,7 @@
         >
           <p
             class="caption__regular"
-            style="color: #0066ff"
+            style="color: rgba(0, 102, 255, 1);"
             :style="{ color: time.match(this.selectedTime) ? 'white' : '' }"
           >
             {{ time }}
@@ -124,7 +124,7 @@
           </p>
         </div>
       </div>
-      <custom-button style="position: fixed;bottom: 82px; left: 8px; width: calc(100% - 16px)" @click="pushNew(this.month, this.selectedDay, this.selectedTime)" v-if="timeSelected">Continue</custom-button>
+      <custom-button style="position: sticky;bottom: 82px; left: 8px; width: calc(100% - 16px)" @click="pushNew(this.month, this.selectedDay, this.selectedTime)" v-if="timeSelected">Continue</custom-button>
     </div>
   </div>
 </template>
@@ -187,7 +187,7 @@ export default {
       daysOfWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       currentMonth: [],
       selectedDay: "",
-      selectedTime: "8:00",
+      selectedTime: "default",
       morning: [
         "8:00 am",
         "9:15 am",

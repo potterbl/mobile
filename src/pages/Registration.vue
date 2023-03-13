@@ -142,8 +142,8 @@
             </div>
         </div>
         <div v-if="!alergic" class="buttons__alergic">
-            <button class="alergic" @click="createAccount(name, mailPhone, message, chosenProcedures, alergics)">No, I don't</button>
-            <button class="alergic" @click="setAlergic">Yes, I do</button>
+            <button style="font-size: 16px" class="alergic" @click="createAccount(name, mailPhone, message, chosenProcedures, alergics)">No, I don't</button>
+            <button style="font-size: 16px" class="alergic" @click="setAlergic">Yes, I do</button>
         </div>
     </content-block>
     <div class="complete" v-if="alergicSub">
